@@ -52,7 +52,12 @@ async function registerUserController(req,res) {
             }
         ) 
  
-        res.cookie("token",token)
+       res.cookie("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "none"
+})
+
 
         res.status(201).json({ 
             message:"user registered successfully", 
@@ -109,7 +114,12 @@ async function registerUserController(req,res) {
             }
         )
 
-        res.cookie("token",token)
+       res.cookie("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "none"
+})
+
 
         res.status(200).json({
             message:"user logged in successfully",
