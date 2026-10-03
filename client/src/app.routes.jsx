@@ -26,8 +26,13 @@ export const router = createBrowserRouter([
         path: "/dashboard",
         element: <Protected><Dashboard /></Protected>
     },{
+    path: "/skill-gap",
+    element: <Protected><h1 className="bg-white text-7xl">lodu complete hon 15 tak nahi soch liyo maa chod dunga</h1></Protected>
+},
+{
     path: "*",
     element: <Navigate to="/dashboard" />
 }
+
 
 ]);
