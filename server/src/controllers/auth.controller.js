@@ -51,23 +51,18 @@ async function registerUserController(req,res) {
                 expiresIn:"30d" 
             }
         ) 
- res.cookie("token", token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+
+
+
+        res.status(201).json({
+    message: "user registered successfully",
+    token: token,
+    user: {
+        id: user._id,
+        username: user.username,
+        email: user.email
+    }
 })
-
-
-
-        res.status(201).json({ 
-            message:"user registered successfully", 
-            user:{ 
-                id:user._id, 
-                username:user.username, 
-                email:user.email 
-            }
-        })
-
     } catch (error) {
 
         console.log(error)
@@ -113,21 +108,18 @@ async function registerUserController(req,res) {
                 expiresIn:"30d"
             }
         )
-res.cookie("token", token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+
+
+
+
+       res.status(200).json({
+    message: "user logged in successfully",
+    token: token,
+    user: {
+        username: user.username,
+        email: user.email
+    }
 })
-
-
-
-        res.status(200).json({
-            message:"user logged in successfully",
-            user:{
-                username:user.username,
-                email:user.email
-            }
-        })
 
     } catch (error) {
 
@@ -146,30 +138,19 @@ res.cookie("token", token, {
      *@acsess  public
      * 
        */
-       async function logoutUserController(req,res){
+      async function logoutUserController(req, res) {
     try {
-
-        const token = req.cookies.token
-
-        if(token){
-            await tokenBlacklistModel.create({token})
+        const token = req.headers.authorization?.split(" ")[1]
+        if (token) {
+            await tokenBlacklistModel.create({ token })
         }
-
-        res.clearCookie("token")
-
-        res.status(200).json({
-            message:"user logged out successfully"
-        })
-
+        res.status(200).json({ message: "user logged out successfully" })
     } catch (error) {
-
         console.log(error)
-
-        res.status(500).json({
-            message:"Internal server error"
-        })
+        res.status(500).json({ message: "Internal server error" })
     }
 }
+
 
          
          /**
