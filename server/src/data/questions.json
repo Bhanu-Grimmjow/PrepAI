@@ -1,0 +1,73 @@
+[
+  { "topic": "react", "text": "What is the difference between controlled and uncontrolled components?" },
+  { "topic": "react", "text": "Explain the React reconciliation algorithm and how the virtual DOM works." },
+  { "topic": "react", "text": "When would you use useCallback vs useMemo, and what problem does each solve?" },
+  { "topic": "react", "text": "What are React keys and why are they important in lists?" },
+  { "topic": "react", "text": "Explain the difference between useEffect cleanup and componentWillUnmount." },
+  { "topic": "react", "text": "What is the Context API and when would you use it over prop drilling?" },
+  { "topic": "react", "text": "How does React.memo work and when should you avoid it?" },
+
+  { "topic": "js", "text": "Explain the event loop, call stack, and microtask queue in JavaScript." },
+  { "topic": "js", "text": "What is a closure and give a practical use case for one." },
+  { "topic": "js", "text": "What is the difference between == and === in JavaScript?" },
+  { "topic": "js", "text": "Explain prototypal inheritance in JavaScript." },
+  { "topic": "js", "text": "What is the difference between var, let, and const?" },
+  { "topic": "js", "text": "How does async/await work under the hood with Promises?" },
+  { "topic": "js", "text": "What is the difference between call, apply, and bind?" },
+
+  { "topic": "ts", "text": "What is the difference between interface and type in TypeScript?" },
+  { "topic": "ts", "text": "Explain generics in TypeScript with an example." },
+  { "topic": "ts", "text": "What are utility types? Explain Partial, Pick, and Omit." },
+  { "topic": "ts", "text": "What is a union type vs an intersection type?" },
+  { "topic": "ts", "text": "How does TypeScript structural typing differ from nominal typing?" },
+
+  { "topic": "nextjs", "text": "What is the difference between SSR, SSG, and ISR in Next.js?" },
+  { "topic": "nextjs", "text": "How does the App Router differ from the Pages Router in Next.js 13+?" },
+  { "topic": "nextjs", "text": "What are Server Components and when would you use them?" },
+  { "topic": "nextjs", "text": "How does Next.js handle image optimization?" },
+  { "topic": "nextjs", "text": "Explain how middleware works in Next.js." },
+
+  { "topic": "nodejs", "text": "What is the Node.js event loop and how does it handle async operations?" },
+  { "topic": "nodejs", "text": "What is the difference between process.nextTick and setImmediate?" },
+  { "topic": "nodejs", "text": "How does clustering work in Node.js and why would you use it?" },
+  { "topic": "nodejs", "text": "What are streams in Node.js and what problem do they solve?" },
+  { "topic": "nodejs", "text": "Explain the difference between require and ES module import in Node.js." },
+
+  { "topic": "express", "text": "What is middleware in Express and how does the middleware chain work?" },
+  { "topic": "express", "text": "How do you handle errors globally in an Express application?" },
+  { "topic": "express", "text": "What is the difference between app.use and app.get in Express?" },
+  { "topic": "express", "text": "How would you structure a large Express application?" },
+  { "topic": "express", "text": "What is CORS and how do you configure it in Express?" },
+
+  { "topic": "dsa", "text": "Explain the time and space complexity of quicksort in average and worst case." },
+  { "topic": "dsa", "text": "What is a hash collision and how do separate chaining and open addressing resolve it?" },
+  { "topic": "dsa", "text": "Explain BFS vs DFS — when would you prefer one over the other?" },
+  { "topic": "dsa", "text": "What is dynamic programming? Explain with the coin change problem." },
+  { "topic": "dsa", "text": "What is the difference between a stack and a queue? Give real-world use cases." },
+  { "topic": "dsa", "text": "Explain binary search and its time complexity." },
+  { "topic": "dsa", "text": "What is a binary search tree and what are its properties?" },
+
+  { "topic": "os", "text": "What is the difference between a process and a thread?" },
+  { "topic": "os", "text": "Explain deadlock — what are the four necessary conditions?" },
+  { "topic": "os", "text": "What is virtual memory and how does paging work?" },
+  { "topic": "os", "text": "What is a context switch and what overhead does it introduce?" },
+  { "topic": "os", "text": "Explain the difference between mutex and semaphore." },
+
+  { "topic": "dbms", "text": "What are ACID properties in a database transaction?" },
+  { "topic": "dbms", "text": "Explain the difference between clustered and non-clustered indexes." },
+  { "topic": "dbms", "text": "What is database normalization? Explain 1NF, 2NF, and 3NF." },
+  { "topic": "dbms", "text": "What is the difference between INNER JOIN, LEFT JOIN, and FULL OUTER JOIN?" },
+  { "topic": "dbms", "text": "What is a transaction isolation level and what anomalies does each prevent?" },
+
+  { "topic": "networking", "text": "Explain the TCP three-way handshake." },
+  { "topic": "networking", "text": "What is the difference between TCP and UDP?" },
+  { "topic": "networking", "text": "What happens when you type a URL into a browser and press Enter?" },
+  { "topic": "networking", "text": "What is DNS and how does DNS resolution work?" },
+  { "topic": "networking", "text": "What is the difference between HTTP/1.1, HTTP/2, and HTTP/3?" },
+
+  { "topic": "oops", "text": "Explain the four pillars of OOP with examples." },
+  { "topic": "oops", "text": "What is the difference between abstraction and encapsulation?" },
+  { "topic": "oops", "text": "Explain SOLID principles — give one example for each." },
+  { "topic": "oops", "text": "What is the difference between composition and inheritance?" },
+  { "topic": "oops", "text": "What is a design pattern? Explain the Singleton and Observer patterns." }
+]
