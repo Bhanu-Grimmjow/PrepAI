@@ -12,7 +12,7 @@ const CATEGORY_META = {
 const StartInterview = () => {
     const navigate = useNavigate();
     const [categories, setCategories]     = useState({});
-    const [selected, setSelected]         = useState(null);   // selected category
+    const [selected, setSelected]         = useState(null);   
     const [loading, setLoading]           = useState(true);
     const [creating, setCreating]         = useState(false);
     const [error, setError]               = useState("");

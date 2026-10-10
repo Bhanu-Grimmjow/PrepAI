@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getSessionById, submitAnswer } from "../services/session.api";
+import useSpeechRecognition from "../hooks/useSpeechRecognition";
 
 const InterviewSession = () => {
     const { id } = useParams();
@@ -14,6 +15,20 @@ const InterviewSession = () => {
     const [submitting, setSubmitting] = useState(false);
     const [error, setError]           = useState("");
 
+   const { isListening, text, startListening, stopListening, resetText, isSupported, error: micError } =
+    useSpeechRecognition();
+
+
+    // sync spoken text into transcript while listening
+    useEffect(() => {
+        if (isListening) setTranscript(text);
+    }, [text, isListening]);
+
+    // stop mic when user leaves the page
+    useEffect(() => {
+        return () => stopListening();
+    }, []);
+
     useEffect(() => {
         getSessionById(id)
             .then((data) => setQuestions(data.session.questions))
@@ -23,6 +38,7 @@ const InterviewSession = () => {
 
     const handleSubmit = async () => {
         if (!transcript.trim()) return;
+        stopListening();
         setSubmitting(true);
         try {
             const data = await submitAnswer(id, {
@@ -38,6 +54,7 @@ const InterviewSession = () => {
     };
 
     const handleNext = () => {
+        resetText();
         if (current + 1 >= questions.length) {
             navigate("/dashboard");
             return;
@@ -89,13 +106,49 @@ const InterviewSession = () => {
                     <p className="text-base font-medium leading-7">{question.text}</p>
                 </div>
 
-                {/* Answer area — only show if no feedback yet */}
+                {/* Answer area */}
                 {!feedback && (
                     <>
+                        {!isSupported && (
+                            <p className="text-xs text-[#756D71] mb-3">
+                                Voice input is not supported in this browser. Type your answer below.
+                            </p>
+                        )}
+
+                        {micError && (
+                            <p className="text-xs text-[#E52B35] mb-3">
+                                {micError === "not-allowed"
+                                    ? "Microphone access was blocked. Allow mic permission and refresh."
+                                    : `Mic error: ${micError}`}
+                            </p>
+                        )}
+
+                        {isSupported && (
+                            <button
+                                onClick={isListening ? stopListening : () => startListening(transcript)}
+                                className={`
+                                    mb-3 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors
+                                    ${isListening
+                                        ? "bg-[#E52B35] text-white hover:bg-[#c9242d]"
+                                        : "bg-[#1A1A1A] text-[#756D71] hover:bg-[#221214] hover:text-white"
+                                    }
+                                `}
+                            >
+                                <span>{isListening ? "⏹ Stop Recording" : "🎙 Start Recording"}</span>
+                                {isListening && (
+                                    <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                                )}
+                            </button>
+                        )}
+
+                        {isListening && (
+                            <p className="text-xs text-[#756D71] mb-2">Listening... speak now</p>
+                        )}
+
                         <textarea
                             value={transcript}
                             onChange={(e) => setTranscript(e.target.value)}
-                            placeholder="Type your answer here..."
+                            placeholder="Click 'Start Recording' to speak, or type your answer here..."
                             rows={6}
                             className="
                                 w-full bg-[#13090A] border border-[#321619] rounded-2xl
@@ -104,6 +157,7 @@ const InterviewSession = () => {
                                 resize-none transition-colors
                             "
                         />
+
                         <button
                             onClick={handleSubmit}
                             disabled={submitting || !transcript.trim()}
@@ -125,7 +179,6 @@ const InterviewSession = () => {
 
                         <p className="text-sm text-[#756D71]">Feedback</p>
 
-                        {/* Scores */}
                         <div className="grid grid-cols-2 gap-3">
                             {Object.entries(feedback.scores).map(([key, val]) => (
                                 <div key={key} className="bg-[#0D0608] rounded-xl p-3">
@@ -139,7 +192,6 @@ const InterviewSession = () => {
                             ))}
                         </div>
 
-                        {/* Overall */}
                         <div className="flex items-center justify-between border-t border-[#321619] pt-4">
                             <p className="text-sm text-[#756D71]">Overall Score</p>
                             <p className="text-2xl font-bold text-[#E52B35]">
@@ -147,7 +199,6 @@ const InterviewSession = () => {
                             </p>
                         </div>
 
-                        {/* Strengths */}
                         <div>
                             <p className="text-xs uppercase tracking-widest text-[#756D71] mb-2">Strengths</p>
                             {feedback.strengths.map((s, i) => (
@@ -157,7 +208,6 @@ const InterviewSession = () => {
                             ))}
                         </div>
 
-                        {/* Weaknesses */}
                         <div>
                             <p className="text-xs uppercase tracking-widest text-[#756D71] mb-2">Weaknesses</p>
                             {feedback.weaknesses.map((w, i) => (
@@ -167,13 +217,11 @@ const InterviewSession = () => {
                             ))}
                         </div>
 
-                        {/* Suggestion */}
                         <div className="bg-[#0D0608] rounded-xl p-4">
                             <p className="text-xs uppercase tracking-widest text-[#756D71] mb-1">Tip</p>
                             <p className="text-sm text-white">{feedback.suggestion}</p>
                         </div>
 
-                        {/* Next button */}
                         <button
                             onClick={handleNext}
                             className="
@@ -194,3 +242,4 @@ const InterviewSession = () => {
 };
 
 export default InterviewSession;
+
