@@ -5,6 +5,7 @@ const answerSchema = new mongoose.Schema({
     userId:       { type: mongoose.Schema.Types.ObjectId, ref: "User",    required: true },
     question:     { type: String, required: true },
     transcript:   { type: String, required: true },
+    questionIndex: { type: Number, required: true },
     scores: {
         clarity:           { type: Number, default: 0 },
         relevance:         { type: Number, default: 0 },
@@ -16,5 +17,7 @@ const answerSchema = new mongoose.Schema({
     weaknesses:   [String],
     suggestion:   { type: String, default: "" },
 }, { timestamps: true });
+
+answerSchema.index({ sessionId: 1, questionIndex: 1 }, { unique: true });
 
 module.exports = mongoose.model("Answer", answerSchema);

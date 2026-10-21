@@ -15,9 +15,8 @@ const InterviewSession = () => {
     const [submitting, setSubmitting] = useState(false);
     const [error, setError]           = useState("");
 
-   const { isListening, text, startListening, stopListening, resetText, isSupported, error: micError } =
-    useSpeechRecognition();
-
+    const { isListening, text, startListening, stopListening, resetText, isSupported, error: micError } =
+        useSpeechRecognition();
 
     // sync spoken text into transcript while listening
     useEffect(() => {
@@ -29,22 +28,31 @@ const InterviewSession = () => {
         return () => stopListening();
     }, []);
 
-    useEffect(() => {
-        getSessionById(id)
-            .then((data) => setQuestions(data.session.questions))
-            .catch(() => setError("Failed to load session"))
-            .finally(() => setLoading(false));
-    }, [id]);
+   useEffect(() => {
+    getSessionById(id)
+        .then((data) => {
+            setQuestions(data.session.questions);
+            if (data.answeredCount >= data.session.questions.length) {
+                navigate("/dashboard");
+            } else {
+                setCurrent(data.answeredCount);
+            }
+        })
+        .catch(() => setError("Failed to load session"))
+        .finally(() => setLoading(false));
+}, [id]);
+
 
     const handleSubmit = async () => {
         if (!transcript.trim()) return;
         stopListening();
         setSubmitting(true);
         try {
-            const data = await submitAnswer(id, {
-                question:   questions[current].text,
-                transcript: transcript.trim(),
-            });
+           const data = await submitAnswer(id, {
+    questionIndex: current,
+    transcript:    transcript.trim(),
+});
+
             setFeedback(data.answer);
         } catch {
             setError("Failed to submit answer");
@@ -115,11 +123,15 @@ const InterviewSession = () => {
                             </p>
                         )}
 
-                        {micError && (
+                        {micError === "not-allowed" && (
                             <p className="text-xs text-[#E52B35] mb-3">
-                                {micError === "not-allowed"
-                                    ? "Microphone access was blocked. Allow mic permission and refresh."
-                                    : `Mic error: ${micError}`}
+                                Microphone access was blocked. Allow mic permission and refresh.
+                            </p>
+                        )}
+
+                        {micError && micError !== "not-allowed" && (
+                            <p className="mb-2 text-xs text-[#E52B35]">
+                                Mic problem ({micError}). Click Start to try again.
                             </p>
                         )}
 
@@ -157,10 +169,15 @@ const InterviewSession = () => {
                                 resize-none transition-colors
                             "
                         />
+                        <p className="text-xs text-[#756D71] mt-1 text-right">
+    {transcript.trim().length} / 20 min
+</p>
+
 
                         <button
                             onClick={handleSubmit}
-                            disabled={submitting || !transcript.trim()}
+                            disabled={submitting || isListening || transcript.trim().length < 20}
+
                             className="
                                 mt-4 w-full py-3 rounded-xl
                                 bg-[#E52B35] text-white text-sm font-medium
@@ -242,4 +259,3 @@ const InterviewSession = () => {
 };
 
 export default InterviewSession;
-

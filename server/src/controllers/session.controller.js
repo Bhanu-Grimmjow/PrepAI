@@ -1,5 +1,6 @@
 const Question = require("../models/question.model");
 const Session  = require("../models/session.model");
+const Answer   = require("../models/answer.model");
 const { CATEGORIES, VALID_TOPICS } = require("../utils/categories");
 
 async function getTopics(req, res) {
@@ -65,7 +66,8 @@ async function getSessionById(req, res) {
             return res.status(404).json({ message: "Session not found" });
         }
 
-        res.json({ session });
+        const answeredCount = await Answer.countDocuments({ sessionId: req.params.id, userId: req.user.id });
+res.json({ session, answeredCount });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Internal server error" });

@@ -44,17 +44,19 @@ export default function useSpeechRecognition() {
             setIsListening(false);
         };
 
-        // let onend flip isListening so last words aren't lost
         recognition.onend = () => setIsListening(false);
 
-        recognition.start();
-        recognitionRef.current = recognition;
-        setIsListening(true);
+        try {
+            recognition.start();
+            recognitionRef.current = recognition;
+            setIsListening(true);
+        } catch (e) {
+            setError(e.message);
+        }
     }, []);
 
     const stopListening = useCallback(() => {
         recognitionRef.current?.stop();
-        // don't setIsListening(false) here — onend will do it after last result
     }, []);
 
     const resetText = useCallback(() => {
