@@ -7,13 +7,14 @@ const InterviewSession = () => {
     const { id } = useParams();
     const navigate = useNavigate();
 
-    const [questions, setQuestions]   = useState([]);
-    const [current, setCurrent]       = useState(0);
-    const [transcript, setTranscript] = useState("");
-    const [feedback, setFeedback]     = useState(null);
-    const [loading, setLoading]       = useState(true);
-    const [submitting, setSubmitting] = useState(false);
-    const [error, setError]           = useState("");
+    const [questions, setQuestions]     = useState([]);
+    const [current, setCurrent]         = useState(0);
+    const [transcript, setTranscript]   = useState("");
+    const [feedback, setFeedback]       = useState(null);
+    const [loading, setLoading]         = useState(true);
+    const [submitting, setSubmitting]   = useState(false);
+    const [error, setError]             = useState("");       // session failed to load
+    const [submitError, setSubmitError] = useState("");       // answer failed to submit
 
     const { isListening, text, startListening, stopListening, resetText, isSupported, error: micError } =
         useSpeechRecognition();
@@ -23,39 +24,34 @@ const InterviewSession = () => {
         if (isListening) setTranscript(text);
     }, [text, isListening]);
 
-    // stop mic when user leaves the page
+    // load the session and resume at the first unanswered question
     useEffect(() => {
-        return () => stopListening();
-    }, []);
-
-   useEffect(() => {
-    getSessionById(id)
-        .then((data) => {
-            setQuestions(data.session.questions);
-            if (data.answeredCount >= data.session.questions.length) {
-                navigate("/dashboard");
-            } else {
-                setCurrent(data.answeredCount);
-            }
-        })
-        .catch(() => setError("Failed to load session"))
-        .finally(() => setLoading(false));
-}, [id]);
-
+        getSessionById(id)
+            .then((data) => {
+                setQuestions(data.session.questions);
+                if (data.answeredCount >= data.session.questions.length) {
+                    navigate("/dashboard");
+                } else {
+                    setCurrent(data.answeredCount);
+                }
+            })
+            .catch(() => setError("Failed to load session"))
+            .finally(() => setLoading(false));
+    }, [id]);
 
     const handleSubmit = async () => {
-        if (!transcript.trim()) return;
+        if (transcript.trim().length < 20) return;
         stopListening();
+        setSubmitError("");
         setSubmitting(true);
         try {
-           const data = await submitAnswer(id, {
-    questionIndex: current,
-    transcript:    transcript.trim(),
-});
-
+            const data = await submitAnswer(id, {
+                questionIndex: current,
+                transcript:    transcript.trim(),
+            });
             setFeedback(data.answer);
-        } catch {
-            setError("Failed to submit answer");
+        } catch (err) {
+            setSubmitError(err.response?.data?.message || "Failed to submit answer");
         } finally {
             setSubmitting(false);
         }
@@ -63,6 +59,7 @@ const InterviewSession = () => {
 
     const handleNext = () => {
         resetText();
+        setSubmitError("");
         if (current + 1 >= questions.length) {
             navigate("/dashboard");
             return;
@@ -85,6 +82,12 @@ const InterviewSession = () => {
     );
 
     const question = questions[current];
+
+    if (!question) return (
+        <main className="min-h-screen bg-[#080808] text-white flex items-center justify-center">
+            <p className="text-[#E52B35]">No questions found for this session.</p>
+        </main>
+    );
 
     return (
         <main className="min-h-screen bg-[#080808] text-white px-4 py-10 sm:px-6 lg:px-10">
@@ -169,24 +172,32 @@ const InterviewSession = () => {
                                 resize-none transition-colors
                             "
                         />
-                        <p className="text-xs text-[#756D71] mt-1 text-right">
-    {transcript.trim().length} / 20 min
-</p>
 
+                        <p className="mt-2 text-xs text-[#4F494C]">
+                            {isListening
+                                ? "Stop recording before submitting."
+                                : transcript.trim().length < 20
+                                    ? `Minimum 20 characters (${transcript.trim().length}/20)`
+                                    : `${transcript.trim().length} characters`
+                            }
+                        </p>
 
                         <button
                             onClick={handleSubmit}
                             disabled={submitting || isListening || transcript.trim().length < 20}
-
                             className="
-                                mt-4 w-full py-3 rounded-xl
+                                mt-3 w-full py-3 rounded-xl
                                 bg-[#E52B35] text-white text-sm font-medium
                                 hover:bg-[#c9242d] transition-colors
                                 disabled:opacity-50 disabled:cursor-not-allowed
                             "
                         >
-                            {submitting ? "Submitting..." : "Submit Answer"}
+                            {submitting ? "Scoring your answer..." : "Submit Answer"}
                         </button>
+
+                        {submitError && (
+                            <p className="mt-3 text-sm text-[#E52B35]">{submitError}</p>
+                        )}
                     </>
                 )}
 
@@ -216,14 +227,16 @@ const InterviewSession = () => {
                             </p>
                         </div>
 
-                        <div>
-                            <p className="text-xs uppercase tracking-widest text-[#756D71] mb-2">Strengths</p>
-                            {feedback.strengths.map((s, i) => (
-                                <p key={i} className="text-sm text-white flex gap-2">
-                                    <span className="text-green-500">✓</span> {s}
-                                </p>
-                            ))}
-                        </div>
+                        {feedback.strengths.length > 0 && (
+                            <div>
+                                <p className="text-xs uppercase tracking-widest text-[#756D71] mb-2">Strengths</p>
+                                {feedback.strengths.map((s, i) => (
+                                    <p key={i} className="text-sm text-white flex gap-2">
+                                        <span className="text-green-500">✓</span> {s}
+                                    </p>
+                                ))}
+                            </div>
+                        )}
 
                         <div>
                             <p className="text-xs uppercase tracking-widest text-[#756D71] mb-2">Weaknesses</p>

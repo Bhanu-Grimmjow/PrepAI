@@ -37,7 +37,9 @@ CONFIDENCE (1-10) — judge from text only, not voice:
 RULES:
 - An answer under 10 words scores at most 4 on every dimension
 - An off-topic answer must score 1-3 on relevance
-- strengths: 2-3 specific things done well
+- If the answer is gibberish, random characters, or not a genuine attempt to answer the question, score exactly 0 on all four dimensions, put "Not a genuine answer" in weaknesses, and leave strengths as an empty array
+- 0 is used only for gibberish; every genuine attempt scores at least 1
+- strengths: 2-3 specific things done well (empty only for gibberish)
 - weaknesses: 2-3 specific things to improve
 - suggestion: one actionable sentence on what to study next
 
@@ -45,10 +47,10 @@ Respond with ONLY valid JSON, no other text, no code fences, no explanation.
 Use exactly this shape:
 {
   "scores": {
-    "clarity": <number 1-10>,
-    "relevance": <number 1-10>,
-    "technicalAccuracy": <number 1-10>,
-    "confidence": <number 1-10>
+    "clarity": <number 0-10>,
+    "relevance": <number 0-10>,
+    "technicalAccuracy": <number 0-10>,
+    "confidence": <number 0-10>
   },
   "strengths": ["...", "..."],
   "weaknesses": ["...", "..."],
@@ -63,7 +65,7 @@ const evaluateAnswer = async (question, transcript) => {
 
     const raw = await groq.chat.completions.create({
         model:                 MODEL,
-        temperature:           0.2,
+        temperature:           0,
         max_completion_tokens: 1200,
         messages: [
             { role: "system", content: SYSTEM_PROMPT },
@@ -93,7 +95,7 @@ const evaluateAnswer = async (question, transcript) => {
     const { clarity, relevance, technicalAccuracy, confidence } = parsed.scores;
     const scores = [clarity, relevance, technicalAccuracy, confidence];
 
-    if (scores.some((s) => typeof s !== "number" || s < 1 || s > 10)) {
+    if (scores.some((s) => typeof s !== "number" || s < 0 || s > 10)) {
         throw new Error("Invalid scores from AI");
     }
 
