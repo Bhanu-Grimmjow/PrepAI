@@ -2,7 +2,7 @@ const Question = require("../models/question.model");
 const Session  = require("../models/session.model");
 const Answer   = require("../models/answer.model");
 const { CATEGORIES, VALID_TOPICS } = require("../utils/categories");
-
+const mongoose = require("mongoose");
 async function getTopics(req, res) {
     res.json({ categories: CATEGORIES });
 }
@@ -73,5 +73,73 @@ res.json({ session, answeredCount });
         res.status(500).json({ message: "Internal server error" });
     }
 }
+async function getSessionSummary(req, res) {
+    try {
+        const { id } = req.params;
 
-module.exports = { getTopics, createSession, getSessions, getSessionById };
+        if (!mongoose.isValidObjectId(id)) {
+            return res.status(404).json({ message: "Session not found" });
+        }
+
+        const session = await Session.findOne({
+            _id: id,
+            userId: req.user.id,
+        });
+
+        if (!session) {
+            return res.status(404).json({ message: "Session not found" });
+        }
+
+        const answers = await Answer.find({
+            sessionId: session._id,
+            userId: req.user.id,
+        })
+            .select("questionIndex question transcript scores overallScore strengths weaknesses suggestion createdAt")
+            .sort({ questionIndex: 1 })
+            .lean();
+
+        const dimensions = ["clarity", "relevance", "technicalAccuracy", "confidence"];
+        const average = (values) =>
+            Math.round(
+                (values.reduce((sum, value) => sum + value, 0) / values.length) * 10
+            ) / 10;
+
+        let stats = null;
+
+        if (answers.length > 0) {
+            const averages = {};
+
+            dimensions.forEach((dimension) => {
+                averages[dimension] = average(
+                    answers.map((answer) => answer.scores[dimension])
+                );
+            });
+
+            const weakest = dimensions.reduce((lowest, dimension) =>
+                averages[dimension] < averages[lowest] ? dimension : lowest
+            );
+
+            stats = {
+                overall: average(answers.map((answer) => answer.overallScore)),
+                averages,
+                weakest,
+            };
+        }
+
+        return res.json({
+            session: {
+                _id: session._id,
+                topic: session.topic,
+                status: session.status,
+                createdAt: session.createdAt,
+            },
+            totalQuestions: session.questions.length,
+            answers,
+            stats,
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}
+module.exports = { getTopics, createSession, getSessions, getSessionById,getSessionSummary};

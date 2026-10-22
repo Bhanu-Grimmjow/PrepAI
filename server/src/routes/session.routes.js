@@ -6,11 +6,13 @@ const {
     createSession,
     getSessions,
     getSessionById,
+    getSessionSummary
 } = require("../controllers/session.controller");
 
 router.get("/topics", getTopics);
 router.get("/",       authUser, getSessions);
 router.post("/",      authUser, createSession);
+router.get("/:id/summary", authUser, getSessionSummary);
 router.get("/:id", authUser, getSessionById);
 
 module.exports = router;

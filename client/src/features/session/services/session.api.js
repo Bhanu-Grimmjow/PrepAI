@@ -27,3 +27,7 @@ export async function submitAnswer(sessionId, payload) {
     const res = await api.post(`/api/sessions/${sessionId}/answers`, payload);
     return res.data;
 }
+export async function getSessionSummary(sessionId) {
+    const res = await api.get(`/api/sessions/${sessionId}/summary`);
+    return res.data;
+}

@@ -30,14 +30,14 @@ const InterviewSession = () => {
             .then((data) => {
                 setQuestions(data.session.questions);
                 if (data.answeredCount >= data.session.questions.length) {
-                    navigate("/dashboard");
+                  navigate(`/interview/${id}/summary`, { replace: true });
                 } else {
                     setCurrent(data.answeredCount);
                 }
             })
             .catch(() => setError("Failed to load session"))
             .finally(() => setLoading(false));
-    }, [id]);
+    }, [id, navigate]);
 
     const handleSubmit = async () => {
         if (transcript.trim().length < 20) return;
@@ -61,7 +61,7 @@ const InterviewSession = () => {
         resetText();
         setSubmitError("");
         if (current + 1 >= questions.length) {
-            navigate("/dashboard");
+            navigate(`/interview/${id}/summary`);
             return;
         }
         setCurrent((c) => c + 1);
