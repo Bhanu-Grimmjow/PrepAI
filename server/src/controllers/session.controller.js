@@ -95,7 +95,7 @@ async function getSessions(req, res) {
 async function getSessionById(req, res) {
     try {
         const session = await Session.findOne({
-            _id:    req.params.id,
+            _id: req.params.id,
             userId: req.user.id,
         }).populate("questions", "text");
 
@@ -103,11 +103,23 @@ async function getSessionById(req, res) {
             return res.status(404).json({ message: "Session not found" });
         }
 
-        const answeredCount = await Answer.countDocuments({ sessionId: req.params.id, userId: req.user.id });
-res.json({ session, answeredCount });
+        const answered = await Answer.find({
+            sessionId: session._id,
+            userId: req.user.id,
+        })
+            .select("questionIndex")
+            .lean();
+
+        const answeredIndexes = answered.map((answer) => answer.questionIndex);
+
+        return res.json({
+            session,
+            answeredCount: answeredIndexes.length,
+            answeredIndexes,
+        });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 }
 async function getSessionSummary(req, res) {

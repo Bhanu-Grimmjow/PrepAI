@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getSessionById, submitAnswer } from "../services/session.api";
 import useSpeechRecognition from "../hooks/useSpeechRecognition";
@@ -18,6 +18,23 @@ const InterviewSession = () => {
 
     const { isListening, text, startListening, stopListening, resetText, isSupported, error: micError } =
         useSpeechRecognition();
+        const loadSession = useCallback(async () => {
+    const data = await getSessionById(id);
+    const answeredIndexes = new Set(data.answeredIndexes);
+
+    setQuestions(data.session.questions);
+
+    const nextQuestion = data.session.questions.findIndex(
+        (_, index) => !answeredIndexes.has(index)
+    );
+
+    if (nextQuestion === -1) {
+        navigate(`/interview/${id}/summary`, { replace: true });
+        return;
+    }
+
+    setCurrent(nextQuestion);
+}, [id, navigate]);
 
     // sync spoken text into transcript while listening
     useEffect(() => {
@@ -26,36 +43,43 @@ const InterviewSession = () => {
 
     // load the session and resume at the first unanswered question
     useEffect(() => {
-        getSessionById(id)
-            .then((data) => {
-                setQuestions(data.session.questions);
-                if (data.answeredCount >= data.session.questions.length) {
-                  navigate(`/interview/${id}/summary`, { replace: true });
-                } else {
-                    setCurrent(data.answeredCount);
-                }
-            })
-            .catch(() => setError("Failed to load session"))
-            .finally(() => setLoading(false));
-    }, [id, navigate]);
+    loadSession()
+        .catch(() => setError("Failed to load session"))
+        .finally(() => setLoading(false));
+}, [loadSession]);
+  const handleSubmit = async () => {
+    if (transcript.trim().length < 20) return;
+    stopListening();
+    setSubmitError("");
+    setSubmitting(true);
 
-    const handleSubmit = async () => {
-        if (transcript.trim().length < 20) return;
-        stopListening();
-        setSubmitError("");
-        setSubmitting(true);
-        try {
-            const data = await submitAnswer(id, {
-                questionIndex: current,
-                transcript:    transcript.trim(),
-            });
-            setFeedback(data.answer);
-        } catch (err) {
-            setSubmitError(err.response?.data?.message || "Failed to submit answer");
-        } finally {
-            setSubmitting(false);
+    try {
+        const data = await submitAnswer(id, {
+            questionIndex: current,
+            transcript: transcript.trim(),
+        });
+        setFeedback(data.answer);
+    } catch (err) {
+        if (err.response?.status === 409) {
+            setSubmitError("That question was already answered. Moving to the next one.");
+            resetText();
+            setTranscript("");
+            setFeedback(null);
+
+            try {
+                await loadSession();
+            } catch {
+                setError("Failed to reload session after answer conflict");
+            }
+
+            return;
         }
-    };
+
+        setSubmitError(err.response?.data?.message || "Failed to submit answer");
+    } finally {
+        setSubmitting(false);
+    }
+};
 
     const handleNext = () => {
         resetText();
