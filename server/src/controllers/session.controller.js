@@ -46,15 +46,52 @@ async function getSessions(req, res) {
     try {
         const sessions = await Session.find({ userId: req.user.id })
             .sort({ createdAt: -1 })
-            .select("topic status createdAt");
+            .limit(20)
+            .select("topic status createdAt questions")
+            .lean();
 
-        res.json({ sessions });
+        const stats = await Answer.aggregate([
+            {
+                $match: {
+                    userId: new mongoose.Types.ObjectId(req.user.id),
+                    sessionId: { $in: sessions.map((session) => session._id) },
+                },
+            },
+            {
+                $group: {
+                    _id: "$sessionId",
+                    answered: { $sum: 1 },
+                    avgScore: { $avg: "$overallScore" },
+                },
+            },
+        ]);
+
+        const statsBySessionId = Object.fromEntries(
+            stats.map((stat) => [String(stat._id), stat])
+        );
+
+        return res.json({
+            sessions: sessions.map((session) => {
+                const stat = statsBySessionId[String(session._id)];
+
+                return {
+                    _id: session._id,
+                    topic: session.topic,
+                    status: session.status,
+                    createdAt: session.createdAt,
+                    totalQuestions: session.questions.length,
+                    answered: stat?.answered ?? 0,
+                    avgScore: stat
+                        ? Math.round(stat.avgScore * 10) / 10
+                        : null,
+                };
+            }),
+        });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 }
-
 async function getSessionById(req, res) {
     try {
         const session = await Session.findOne({

@@ -80,6 +80,21 @@ const StartInterview = () => {
                         <p className="text-xs uppercase tracking-[0.18em] text-[#E52B35] mb-2">
                             Mock Interview
                         </p>
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+    <p className="text-sm text-[#756D71]">
+        Choose what you want to be interviewed on
+    </p>
+
+    <button
+        type="button"
+        onClick={() => navigate("/history")}
+        disabled={creating}
+        className="inline-flex items-center justify-center gap-2 self-start sm:self-auto px-4 py-2.5 rounded-xl border border-[#321619] bg-[#13090A] text-sm font-medium text-[#D1CDD0] transition-colors hover:border-[#E52B35] hover:bg-[#1A0C0E] hover:text-white disabled:opacity-50"
+    >
+        Past interviews
+        <span aria-hidden="true">→</span>
+    </button>
+</div>
                         <h2 className="text-2xl font-semibold mb-1">Pick a category</h2>
                         <p className="text-sm text-[#756D71] mb-8">
                             Choose what you want to be interviewed on

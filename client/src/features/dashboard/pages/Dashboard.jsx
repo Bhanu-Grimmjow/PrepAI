@@ -31,7 +31,7 @@ const Dashboard = () => {
                     <p className="text-xs uppercase tracking-[0.18em] text-[#E52B35] mb-2">
                         Dashboard
                     </p>
-
+   
                     <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
                         Welcome back,{" "}
                         <span className="text-[#E52B35]">

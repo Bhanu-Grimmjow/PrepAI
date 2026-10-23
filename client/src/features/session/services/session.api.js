@@ -31,3 +31,7 @@ export async function getSessionSummary(sessionId) {
     const res = await api.get(`/api/sessions/${sessionId}/summary`);
     return res.data;
 }
+export async function getSessions() {
+    const res = await api.get("/api/sessions");
+    return res.data;
+}

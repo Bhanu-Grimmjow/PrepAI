@@ -45,7 +45,6 @@ async function submitAnswer(req, res) {
         if (!mongoose.isValidObjectId(sessionId)) {
             return res.status(404).json({ message: "Session not found" });
         }
-
         if (typeof transcript !== "string" || transcript.trim().length < 20 || transcript.trim().length > 3000) {
             return res.status(400).json({ message: "Answer must be between 20 and 3000 characters" });
         }
