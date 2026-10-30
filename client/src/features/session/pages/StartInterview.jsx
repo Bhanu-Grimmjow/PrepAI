@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getTopics, createSession } from "../services/session.api";
-
+import { formatTopic } from "../utils/topicLabels";
 const CATEGORY_META = {
     frontend: { label: "Frontend",     color: "#3B82F6" },
     backend:  { label: "Backend",      color: "#10B981" },
     core:     { label: "Core Subject", color: "#F59E0B" },
-    dsa:      { label: "DSA",          color: "#E52B35" },
+   dsa: { label: "Data Structures and Algorithms", color: "#E52B35" },
 };
 
 const StartInterview = () => {
@@ -78,7 +78,7 @@ const StartInterview = () => {
                 {!selected && (
                     <>
                         <p className="text-xs uppercase tracking-[0.18em] text-[#E52B35] mb-2">
-                            Mock Interview
+                         Interview
                         </p>
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
     <p className="text-sm text-[#756D71]">
@@ -109,9 +109,10 @@ const StartInterview = () => {
                                     className="
                                         text-left p-6 rounded-2xl
                                         bg-[#13090A] border border-[#321619]
-                                        hover:border-[#E52B35] hover:shadow-[0_0_20px_rgba(229,43,53,0.15)]
-                                        hover:-translate-y-0.5
-                                        transition-all duration-200
+                                        hover:border-[#6B2930] hover:bg-[#1A0C0E]
+active:border-[#E52B35]
+focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6B2930]
+   transition-all duration-200
                                         disabled:opacity-50
                                     "
                                 >
@@ -119,7 +120,7 @@ const StartInterview = () => {
                                         {CATEGORY_META[cat]?.label || cat}
                                     </p>
                                     <p className="text-xs text-[#756D71] mt-1">
-                                        {categories[cat].join(", ")}
+                                       {categories[cat].map(formatTopic).join(", ")}
                                     </p>
                                 </button>
                             ))}
@@ -147,14 +148,16 @@ const StartInterview = () => {
                                     className="
                                         text-left p-6 rounded-2xl
                                         bg-[#13090A] border border-[#321619]
-                                        hover:border-[#E52B35] hover:shadow-[0_0_20px_rgba(229,43,53,0.15)]
+                                      hover:border-[#6B2930] hover:bg-[#1A0C0E]
+                                       active:border-[#E52B35]
+                                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6B2930]
                                         hover:-translate-y-0.5
                                         transition-all duration-200
                                         disabled:opacity-50
                                     "
                                 >
                                     <p className="text-base font-semibold uppercase tracking-wide">
-                                        {topic}
+                                       {formatTopic(topic)}
                                     </p>
                                 </button>
                             ))}

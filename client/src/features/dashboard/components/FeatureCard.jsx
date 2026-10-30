@@ -5,10 +5,12 @@ const FeatureCard = ({
     footer,
     icon,
     onClick,
+    muted = false,
 }) => {
     return (
         <button
             onClick={onClick}
+            style={muted ? { opacity: 0.55, filter: "grayscale(0.4)" } : undefined}
             className="
                 group
                 relative

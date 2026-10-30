@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getSessions } from "../services/session.api";
+import { formatTopic } from "../utils/topicLabels";
 
 const STATUS_STYLES = {
     completed: "bg-green-950 text-green-400 border-green-900",
@@ -98,8 +99,8 @@ const SessionHistory = () => {
                             >
                                 <div className="flex flex-wrap items-start justify-between gap-3">
                                     <div>
-                                        <h2 className="font-semibold uppercase">
-                                            {session.topic}
+                                        <h2 className="font-semibold">
+                                            {formatTopic(session.topic)}
                                         </h2>
                                         <p className="text-xs text-[#756D71] mt-1">
                                             {formatDate(session.createdAt)}
@@ -120,11 +121,12 @@ const SessionHistory = () => {
                                     <span className="text-[#8F878B]">
                                         {session.answered}/{session.totalQuestions} answered
                                     </span>
-                                    <span className="text-white font-medium">
-                                        Average: {session.avgScore == null
-                                            ? "—"
-                                            : `${session.avgScore}/10`}
-                                    </span>
+                                  <span className="text-[#756D71]">
+    Average:{" "}
+    <span className="text-lg font-semibold text-[#E52B35]">
+        {session.avgScore == null ? "—" : `${session.avgScore}/10`}
+    </span>
+</span>
                                 </div>
                             </button>
                         ))}

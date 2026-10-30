@@ -117,23 +117,32 @@ const InterviewSession = () => {
         <main className="min-h-screen bg-[#080808] text-white px-4 py-10 sm:px-6 lg:px-10">
             <div className="max-w-2xl mx-auto">
 
-                {/* Progress */}
-                <div className="flex items-center justify-between mb-8">
-                    <p className="text-xs uppercase tracking-[0.18em] text-[#E52B35]">
-                        Mock Interview
-                    </p>
-                    <p className="text-xs text-[#756D71]">
-                        Question {current + 1} of {questions.length}
-                    </p>
-                </div>
-
+             
                 {/* Progress bar */}
-                <div className="w-full h-1 bg-[#1A1A1A] rounded-full mb-8">
-                    <div
-                        className="h-1 bg-[#E52B35] rounded-full transition-all duration-300"
-                        style={{ width: `${((current + 1) / questions.length) * 100}%` }}
-                    />
-                </div>
+              <div className="mb-8">
+    <div className="mb-3 flex items-center justify-between">
+        <p className="text-xs uppercase tracking-[0.18em] text-[#E52B35]">
+            Interview
+        </p>
+        <p className="rounded-full border border-[#321619] bg-[#13090A] px-3 py-1 text-xs font-medium text-[#D1CDD0]">
+            Question {current + 1} <span className="text-[#756D71]">of {questions.length}</span>
+        </p>
+    </div>
+
+    <div
+        role="progressbar"
+        aria-label="Interview progress"
+        aria-valuemin={1}
+        aria-valuemax={questions.length}
+        aria-valuenow={current + 1}
+        className="h-2 w-full overflow-hidden rounded-full bg-[#1A1A1A]"
+    >
+        <div
+            className="h-full rounded-full bg-[#E52B35] transition-all duration-300"
+            style={{ width: `${((current + 1) / questions.length) * 100}%` }}
+        />
+    </div>
+</div>
 
                 {/* Question */}
                 <div className="bg-[#13090A] border border-[#321619] rounded-2xl p-6 mb-6">
@@ -163,34 +172,63 @@ const InterviewSession = () => {
                         )}
 
                         {isSupported && (
-                            <button
-                                onClick={isListening ? stopListening : () => startListening(transcript)}
-                                className={`
-                                    mb-3 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors
-                                    ${isListening
-                                        ? "bg-[#E52B35] text-white hover:bg-[#c9242d]"
-                                        : "bg-[#1A1A1A] text-[#756D71] hover:bg-[#221214] hover:text-white"
-                                    }
-                                `}
-                            >
-                                <span>{isListening ? "⏹ Stop Recording" : "🎙 Start Recording"}</span>
-                                {isListening && (
-                                    <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-                                )}
-                            </button>
+                          <button
+    type="button"
+    onClick={isListening ? stopListening : () => startListening(transcript)}
+    aria-pressed={isListening}
+   className={`mb-4 inline-flex items-center gap-3 rounded-xl border px-5 py-3 text-sm font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#756D71] focus-visible:ring-offset-2 focus-visible:ring-offset-[#080808] ${
+    isListening
+    ? "border-[#E52B35] bg-[#1A1112] text-[#D1CDD0] shadow-[0_0_12px_rgba(229,43,53,0.2)] hover:bg-[#211416]"
+        : "border-[#321619] bg-[#13090A] text-[#B9B0B3] hover:border-[#4A2529] hover:bg-[#1A0C0E] hover:text-white"
+}`}
+>
+    {isListening ? (
+        <span className="relative flex h-3 w-3">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#756D71] opacity-60" />
+            <span className="relative inline-flex h-3 w-3 rounded-full bg-[#756D71]" />
+        </span>
+    ) : (
+        <svg
+            aria-hidden="true"
+            className="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <rect x="9" y="2" width="6" height="12" rx="3" />
+            <path d="M5 10v2a7 7 0 0 0 14 0v-2" />
+            <path d="M12 19v3" />
+            <path d="M8 22h8" />
+        </svg>
+    )}
+
+    <span>{isListening ? "Stop recording" : "Start recording"}</span>
+
+    {isListening && (
+        <span className="rounded-full bg-[#321619] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#B9B0B3]">
+            Live
+        </span>
+    )}
+</button>
                         )}
 
                         {isListening && (
                             <p className="text-xs text-[#756D71] mb-2">Listening... speak now</p>
                         )}
-
+<label htmlFor="answer-transcript" className="mb-2 block text-sm font-medium text-[#D1CDD0]">
+    Your answer
+</label>
                         <textarea
+                        id="answer-transcript"
                             value={transcript}
                             onChange={(e) => setTranscript(e.target.value)}
                             placeholder="Click 'Start Recording' to speak, or type your answer here..."
                             rows={6}
                             className="
-                                w-full bg-[#13090A] border border-[#321619] rounded-2xl
+                                w-full bg-[#0D0608] border border-[#4A2529] rounded-2xl
                                 p-4 text-sm text-white placeholder-[#4F494C]
                                 focus:outline-none focus:border-[#E52B35]
                                 resize-none transition-colors

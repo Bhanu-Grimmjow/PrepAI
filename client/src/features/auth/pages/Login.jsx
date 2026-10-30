@@ -84,20 +84,11 @@ const [password,setPassword]= useState("")
       >
 
         {/* Logo */}
-        <div className="flex justify-center mb-3">
-          <div
-            className="
-              w-11 h-11
-              rounded-xl
-              flex items-center justify-center
-              bg-[#2A0D10]
-              border border-[#7A252C]
-              text-xl
-            "
-          >
-            🔥
-          </div>
-        </div>
+       <div className="mb-3 flex justify-center">
+  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#E52B35]">
+    <span className="text-lg font-bold text-white">P</span>
+  </div>
+</div>
 
         {/* Heading */}
         <div className="text-center mb-5">
@@ -158,18 +149,7 @@ const [password,setPassword]= useState("")
                 Password
               </label>
 
-              <a
-                href="#"
-                className="
-                  text-xs sm:text-sm
-                  text-[#E52B35]
-                  transition-colors
-                  duration-150
-                  hover:text-[#FF5A62]
-                "
-              >
-                Forgot password?
-              </a>
+              
 
             </div>
 
@@ -198,16 +178,7 @@ const [password,setPassword]= useState("")
             />
           </div>
 
-          {/* Remember Me */}
-          <label className="flex items-center gap-2 text-sm text-[#8F8A94] cursor-pointer">
-            <input
-              type="checkbox"
-              className="w-4 h-4 accent-[#E52B35] cursor-pointer"
-            />
-
-            Remember me
-          </label>
-
+          
           {/* Login Button */}
           <button
             type="submit"
@@ -224,6 +195,8 @@ const [password,setPassword]= useState("")
 
               hover:bg-[#F13A44]
               active:bg-[#D9232D]
+              focus-visible:outline-none
+focus-visible:ring-2 focus-visible:ring-[#E52B35]
             "
           >
             Login
@@ -231,49 +204,7 @@ const [password,setPassword]= useState("")
 
         </form>
 
-        {/* Divider */}
-        <div className="flex items-center gap-4 my-4">
-
-          <div className="h-px flex-1 bg-[#321619]" />
-
-          <span className="text-xs text-[#77717A]">
-            OR
-          </span>
-
-          <div className="h-px flex-1 bg-[#321619]" />
-
-        </div>
-
-        {/* Google Button */}
-        <button
-          type="button"
-          className="
-            w-full
-            h-11
-            rounded-lg
-            border border-[#321619]
-            bg-transparent
-            text-white
-            font-medium
-
-            flex
-            items-center
-            justify-center
-            gap-2
-
-            transition-colors
-            duration-150
-
-            hover:bg-[#1A0C0E]
-            hover:border-[#4A1D22]
-          "
-        >
-          <span className="font-bold">
-            G
-          </span>
-
-          Continue with Google
-        </button>
+       
 
         {/* Signup */}
         <p className="text-center text-sm text-[#8F8A94] mt-4">
@@ -286,7 +217,9 @@ const [password,setPassword]= useState("")
               font-semibold
               transition-colors
               duration-150
-              hover:text-[#FF5A62]    
+              hover:text-[#FF5A62] 
+              focus-visible:outline-none
+focus-visible:ring-2 focus-visible:ring-[#E52B35]   
             "
           >
             Sign Up
