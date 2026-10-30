@@ -85,39 +85,47 @@ const DashboardHeader = ({ user, onLogout }) => {
 
 
                 {/* Logout */}
-                <button
-                    onClick={onLogout}
-                    aria-label="Logout"
-                    className="
-                        w-11 h-11
-                        rounded-xl
-                        bg-[#11090A]
-                        border border-[#321619]
-                        flex items-center justify-center
-                        text-[#8F878B]
-                        transition-colors
-                        duration-150
-                        hover:bg-[#1A0C0E]
-                        hover:border-[#64232A]
-                        hover:text-[#E52B35]
-                    "
-                >
-                    <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                        <path d="M16 17l5-5-5-5" />
-                        <path d="M21 12H9" />
-                    </svg>
-                </button>
-
+               <button
+    type="button"
+    onClick={onLogout}
+    aria-label="Log out"
+    title="Log out"
+    className="
+        h-11 px-3
+        rounded-xl
+        bg-[#11090A]
+        border border-[#321619]
+        flex items-center justify-center gap-2
+        text-[#8F878B]
+        transition-colors duration-150
+        hover:bg-[#1A0C0E]
+        hover:border-[#64232A]
+        hover:text-[#E52B35]
+        focus-visible:outline-none
+        focus-visible:ring-2
+        focus-visible:ring-[#E52B35]
+        focus-visible:ring-offset-2
+        focus-visible:ring-offset-[#080808]
+    "
+>
+    <svg
+        aria-hidden="true"
+        focusable="false"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+    >
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+        <path d="M16 17l5-5-5-5" />
+        <path d="M21 12H9" />
+    </svg>
+    <span className="hidden md:inline text-sm">Log out</span>
+</button>
 
                 {/* Mobile Avatar */}
                 <div

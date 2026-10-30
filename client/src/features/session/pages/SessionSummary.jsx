@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getSessionSummary } from "../services/session.api";
-
+import { formatTopic } from "../utils/topicLabels";
 const DIMENSIONS = [
     { key: "clarity", label: "Clarity" },
     { key: "relevance", label: "Relevance" },
@@ -62,7 +62,7 @@ const SessionSummary = () => {
                 </p>
 
                 <h1 className="text-2xl sm:text-3xl font-semibold">
-                    {session.topic.toUpperCase()} Results
+                  {formatTopic(session.topic)} Results
                 </h1>
 
                 <p className="text-sm text-[#756D71] mt-2">

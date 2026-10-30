@@ -83,21 +83,11 @@ const{loading,handleRegister}=useAuth()
       >
 
         {/* Logo */}
-        <div className="flex justify-center mb-3">
-          <div
-            className="
-              w-11 h-11
-              rounded-xl
-              flex items-center justify-center
-              bg-[#2A0D10]
-              border border-[#7A252C]
-              text-xl
-            "
-          >
-            🔥
-          </div>
-        </div>
-
+        <div className="mb-3 flex justify-center">
+  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#E52B35]">
+    <span className="text-lg font-bold text-white">P</span>
+  </div>
+</div>
         {/* Heading */}
         <div className="text-center mb-5">
           <h1 className="text-2xl sm:text-3xl font-bold text-white">
@@ -227,30 +217,9 @@ const{loading,handleRegister}=useAuth()
               cursor-pointer
             "
           >
-            <input
-              type="checkbox"
-              className="
-                w-4 h-4
-                mt-0.5
-                accent-[#E52B35]
-                cursor-pointer
-              "
-            />
+            
 
-            <span>
-              I agree to the{" "}
-              <a
-                href="#"
-                className="
-                  text-[#E52B35]
-                  hover:text-[#FF5A62]
-                  transition-colors
-                  duration-150
-                "
-              >
-                Terms & Conditions
-              </a>
-            </span>
+       
           </label>
 
           {/* Register Button */}
@@ -269,6 +238,8 @@ const{loading,handleRegister}=useAuth()
 
               hover:bg-[#F13A44]
               active:bg-[#D9232D]
+              focus-visible:outline-none
+focus-visible:ring-2 focus-visible:ring-[#E52B35]
             "
           >
             Create Account
@@ -276,50 +247,7 @@ const{loading,handleRegister}=useAuth()
 
         </form>
 
-        {/* Divider */}
-        <div className="flex items-center gap-4 my-4">
-
-          <div className="h-px flex-1 bg-[#321619]" />
-
-          <span className="text-xs text-[#77717A]">
-            OR
-          </span>
-
-          <div className="h-px flex-1 bg-[#321619]" />
-
-        </div>
-
-        {/* Google */}
-        <button
-          type="button"
-          className="
-            w-full
-            h-11
-            rounded-lg
-            border border-[#321619]
-            bg-transparent
-            text-white
-            font-medium
-
-            flex
-            items-center
-            justify-center
-            gap-2
-
-            transition-colors
-            duration-150
-
-            hover:bg-[#1A0C0E]
-            hover:border-[#4A1D22]
-          "
-        >
-          <span className="font-bold">
-            G
-          </span>
-
-          Continue with Google
-        </button>
-
+       
         {/* Login */}
         <p className="text-center text-sm text-[#8F8A94] mt-4">
           Already have an account?{" "}
@@ -334,6 +262,8 @@ const{loading,handleRegister}=useAuth()
               duration-150
 
               hover:text-[#FF5A62]
+              focus-visible:outline-none
+focus-visible:ring-2 focus-visible:ring-[#E52B35]
             "
           >
             Login

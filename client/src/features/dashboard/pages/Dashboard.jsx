@@ -70,7 +70,7 @@ const Dashboard = () => {
                             <span className="w-1.5 h-1.5 rounded-full bg-[#E52B35]" />
 
                             <span className="text-[10px] text-[#756D71]">
-                                3 tools available
+                               2 tools live
                             </span>
 
                         </div>
