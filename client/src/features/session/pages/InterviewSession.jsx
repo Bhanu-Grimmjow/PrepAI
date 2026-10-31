@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getSessionById, submitAnswer } from "../services/session.api";
 import useSpeechRecognition from "../hooks/useSpeechRecognition";
@@ -6,7 +6,7 @@ import useSpeechRecognition from "../hooks/useSpeechRecognition";
 const InterviewSession = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-
+const nextButtonRef = useRef(null);
     const [questions, setQuestions]     = useState([]);
     const [current, setCurrent]         = useState(0);
     const [transcript, setTranscript]   = useState("");
@@ -41,6 +41,14 @@ const InterviewSession = () => {
         if (isListening) setTranscript(text);
     }, [text, isListening]);
 
+useEffect(() => {
+    if (feedback) {
+        nextButtonRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+        });
+    }
+}, [feedback]);
     // load the session and resume at the first unanswered question
     useEffect(() => {
     loadSession()
@@ -315,7 +323,9 @@ const InterviewSession = () => {
                         </div>
 
                         <button
+
                             onClick={handleNext}
+                            ref={nextButtonRef}
                             className="
                                 w-full py-3 rounded-xl
                                 bg-[#E52B35] text-white text-sm font-medium

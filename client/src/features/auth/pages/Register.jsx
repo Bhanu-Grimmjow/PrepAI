@@ -1,279 +1,155 @@
-import React, { useState } from "react";
-import {useNavigate,Link} from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import AuthLayout from "../components/AuthLayout";
 
 const Register = () => {
-  const [email,setEmail]= useState("")
-  const [password,setPassword]= useState("")
-  const[username, setUsername]=useState("")
-const navigate=useNavigate();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [username, setUsername] = useState("");
+    const navigate = useNavigate();
+    const { loading, handleRegister } = useAuth();
+const [showPassword, setShowPassword] = useState(false);
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        await handleRegister({ username, email, password });
+        navigate("/dashboard");
+    };
 
-const{loading,handleRegister}=useAuth()
+    const layoutProps = {
+        heading: "Practice interviews. Get honest feedback.",
+        subtitle:
+            "Create an account to run mock interviews, see how your answers score, and find skills to build next.",
+    };
 
-    const handleSubmit= async(e)=>{
-        e.preventDefault();
-        await handleRegister({username,email,password});
-        navigate("/dashboard")
-
-    }
     if (loading) {
-  return (
-    <div className="min-h-screen w-full bg-[#080808] flex items-center justify-center">
+        return (
+            <AuthLayout {...layoutProps}>
+                <div
+                    role="status"
+                    className="rounded-2xl border border-[#321619] bg-[#13090A] p-8 text-center"
+                >
+                    <div className="flex items-center justify-center gap-1.5">
+                        <span className="h-2 w-2 animate-pulse rounded-full bg-[#E52B35]" />
+                        <span className="h-2 w-2 animate-pulse rounded-full bg-[#E52B35] [animation-delay:150ms]" />
+                        <span className="h-2 w-2 animate-pulse rounded-full bg-[#E52B35] [animation-delay:300ms]" />
+                    </div>
+                    <p className="mt-4 text-sm text-[#B9B0B3]">Loading...</p>
+                </div>
+            </AuthLayout>
+        );
+    }
 
-      <div className="flex flex-col items-center">
+    return (
+        <AuthLayout {...layoutProps}>
+            <div className="w-full rounded-2xl border border-[#321619] bg-[#13090A] px-6 py-6 sm:px-7">
+                <div className="mb-5 text-center">
+                    <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-[#E52B35]">
+                        <span className="text-lg font-bold">P</span>
+                    </div>
+                    <h2 className="text-2xl font-bold sm:text-3xl">
+                        Create Account
+                    </h2>
+                    <p className="mt-1 text-sm text-[#8F8A94]">
+                        Create your account to get started
+                    </p>
+                </div>
 
-        {/* Loading Indicator */}
-        <div className="flex items-center gap-1.5">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label
+                            htmlFor="register-name"
+                            className="mb-1.5 block text-sm font-medium"
+                        >
+                            User Name
+                        </label>
+                        <input
+                            id="register-name"
+                            type="text"
+                            value={username}
+                            onChange={(event) => setUsername(event.target.value)}
+                            placeholder="Enter your full name"
+                            className="h-11 w-full rounded-lg border border-[#321619] bg-[#0B0B0B] px-4 text-white placeholder-[#5F5963] outline-none transition-colors hover:border-[#4A1D22] focus:border-[#E52B35] focus-visible:ring-2 focus-visible:ring-[#E52B35]"
+                        />
+                    </div>
 
-          <span
-            className="
-              w-2 h-2
-              rounded-full
-              bg-[#E52B35]
-              animate-pulse
-            "
-          />
+                    <div>
+                        <label
+                            htmlFor="register-email"
+                            className="mb-1.5 block text-sm font-medium"
+                        >
+                            Email
+                        </label>
+                        <input
+                            id="register-email"
+                            type="email"
+                            value={email}
+                            onChange={(event) => setEmail(event.target.value)}
+                            placeholder="Enter your email"
+                            className="h-11 w-full rounded-lg border border-[#321619] bg-[#0B0B0B] px-4 text-white placeholder-[#5F5963] outline-none transition-colors hover:border-[#4A1D22] focus:border-[#E52B35] focus-visible:ring-2 focus-visible:ring-[#E52B35]"
+                        />
+                    </div>
 
-          <span
-            className="
-              w-2 h-2
-              rounded-full
-              bg-[#E52B35]
-              animate-pulse
-              [animation-delay:150ms]
-            "
-          />
-
-          <span
-            className="
-              w-2 h-2
-              rounded-full
-              bg-[#E52B35]
-              animate-pulse
-              [animation-delay:300ms]
-            "
-          />
-
-        </div>
-
-        <p className="mt-4 text-sm text-[#8F8A94]">
-          Loading...
-        </p>
-
-      </div>
-
-    </div>
-  );
-}
-  
-  return (
-    <main className="min-h-screen w-full bg-[#080808] flex items-center justify-center px-4 py-6">
-
-      {/* Register Card */}
-      <div
-        className="
-          w-full
-          max-w-[420px]
-          bg-[#13090A]
-          border border-[#321619]
-          rounded-2xl
-          px-6 py-5
-          sm:px-7 sm:py-6
-        "
-      >
-
-        {/* Logo */}
-        <div className="mb-3 flex justify-center">
-  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#E52B35]">
-    <span className="text-lg font-bold text-white">P</span>
-  </div>
+                    <div>
+                        <label
+                            htmlFor="register-password"
+                            className="mb-1.5 block text-sm font-medium"
+                        >
+                            Password
+                        </label>
+                        <div className="relative">
+    <input
+        id="register-password"
+        type={showPassword ? "text" : "password"}
+        value={password}
+        onChange={(event) => setPassword(event.target.value)}
+        placeholder="Create a password"
+        className="h-11 w-full rounded-lg border border-[#321619] bg-[#0B0B0B] px-4 pr-12 text-white placeholder-[#5F5963] outline-none transition-colors hover:border-[#4A1D22] focus:border-[#E52B35] focus-visible:ring-2 focus-visible:ring-[#E52B35]"
+    />
+    <button
+        type="button"
+        onClick={() => setShowPassword((visible) => !visible)}
+        aria-label={showPassword ? "Hide password" : "Show password"}
+        aria-pressed={showPassword}
+        className="absolute inset-y-0 right-0 flex items-center px-4 text-[#8F8A94] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E52B35]"
+    >
+        {showPassword ? (
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <path d="M3 3l18 18" />
+                <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
+                <path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c5 0 8.5 4.5 9.5 7-.4 1-1.2 2.1-2.2 3.1" />
+                <path d="M6.2 6.2C3.9 7.6 2.4 9.7 2 12c.5 1.3 1.7 3.1 3.8 4.5A10.3 10.3 0 0 0 12 19c1 0 2-.2 2.9-.5" />
+            </svg>
+        ) : (
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+                <circle cx="12" cy="12" r="3" />
+            </svg>
+        )}
+    </button>
 </div>
-        {/* Heading */}
-        <div className="text-center mb-5">
-          <h1 className="text-2xl sm:text-3xl font-bold text-white">
-            Create Account
-          </h1>
+                    </div>
 
-          <p className="text-sm text-[#8F8A94] mt-1">
-            Create your account to get started
-          </p>
-        </div>
+                    <button
+                        type="submit"
+                        className="h-11 w-full rounded-lg bg-[#E52B35] font-semibold text-white transition-colors hover:bg-[#F13A44] active:bg-[#D9232D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E52B35]"
+                    >
+                        Create Account
+                    </button>
+                </form>
 
-        {/* Form */}
-        <form className="space-y-4" onSubmit={handleSubmit}>
-
-          {/* User Name */}
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-white mb-1.5"
-            >
-              User Name 
-            </label>
-
-            <input
-            onChange={(e)=>{setUsername(e.target.value)}}
-              id="name"
-              type="text"
-              placeholder="Enter your full name"
-              className="
-                w-full
-                h-11
-                px-4
-                rounded-lg
-                bg-[#0B0B0B]
-                border border-[#321619]
-                text-white
-                placeholder-[#5F5963]
-                outline-none
-
-                transition-colors
-                duration-150
-
-                hover:border-[#4A1D22]
-                focus:border-[#E52B35]
-              "
-            />
-          </div>
-
-          {/* Email */}
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-white mb-1.5"
-            >
-              Email
-            </label>
-
-            <input
-            onChange={(e)=>{setEmail(e.target.value)}}
-              id="email"
-              type="email"
-              placeholder="Enter your email"
-              className="
-                w-full
-                h-11
-                px-4
-                rounded-lg
-                bg-[#0B0B0B]
-                border border-[#321619]
-                text-white
-                placeholder-[#5F5963]
-                outline-none
-
-                transition-colors
-                duration-150
-
-                hover:border-[#4A1D22]
-                focus:border-[#E52B35]
-              "
-            />
-          </div>
-
-          {/* Password */}
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-white mb-1.5"
-            >
-              Password
-            </label>
-
-            <input
-            onChange={(e)=>{setPassword(e.target.value)}}
-              id="password"
-              type="password"
-              placeholder="Create a password"
-              className="
-                w-full
-                h-11
-                px-4
-                rounded-lg
-                bg-[#0B0B0B]
-                border border-[#321619]
-                text-white
-                placeholder-[#5F5963]
-                outline-none
-
-                transition-colors
-                duration-150
-
-                hover:border-[#4A1D22]
-                focus:border-[#E52B35]
-              "
-            />
-          </div>
-
-         
-
-          {/* Terms */}
-          <label
-            className="
-              flex
-              items-start
-              gap-2
-              text-sm
-              text-[#8F8A94]
-              cursor-pointer
-            "
-          >
-            
-
-       
-          </label>
-
-          {/* Register Button */}
-          <button
-            type="submit"
-            className="
-              w-full
-              h-11
-              rounded-lg
-              bg-[#E52B35]
-              text-white
-              font-semibold
-
-              transition-colors
-              duration-150
-
-              hover:bg-[#F13A44]
-              active:bg-[#D9232D]
-              focus-visible:outline-none
-focus-visible:ring-2 focus-visible:ring-[#E52B35]
-            "
-          >
-            Create Account
-          </button>
-
-        </form>
-
-       
-        {/* Login */}
-        <p className="text-center text-sm text-[#8F8A94] mt-4">
-          Already have an account?{" "}
-
-          <Link
-            to={"/login"}
-            className="
-              text-[#E52B35]
-              font-semibold
-
-              transition-colors
-              duration-150
-
-              hover:text-[#FF5A62]
-              focus-visible:outline-none
-focus-visible:ring-2 focus-visible:ring-[#E52B35]
-            "
-          >
-            Login
-          </Link>
-        </p>
-
-      </div>
-
-    </main>
-  );
+                <p className="mt-4 text-center text-sm text-[#8F8A94]">
+                    Already have an account?{" "}
+                    <Link
+                        to="/login"
+                        className="font-semibold text-[#E52B35] hover:text-[#FF5A62] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E52B35]"
+                    >
+                        Login
+                    </Link>
+                </p>
+            </div>
+        </AuthLayout>
+    );
 };
 
 export default Register;
