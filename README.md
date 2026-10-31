@@ -10,7 +10,7 @@ PrepAI is an AI-powered interview preparation app. Practice mock interviews, rev
 
 ## Features
 
-- **Mock interviews:** Choose an interview topic and answer questions by voice or text.
+- **Interviews:** Choose an interview topic and answer questions by voice or text.
 - **Answer feedback:** Review scores for clarity, relevance, technical accuracy, and confidence, along with strengths, weaknesses, and a suggestion.
 - **Interview history and results:** Revisit saved sessions and question-by-question feedback.
 - **Skill Gap Analyzer:** Upload a resume and a job description, or paste the job description, to see matched, partially matched, and missing skills, strengths, and an improvement roadmap.
